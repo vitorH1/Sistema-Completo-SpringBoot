@@ -5,9 +5,9 @@ Este é um sistema desenvolvido com **Spring Boot**, incluindo autenticação de
 ## 🚀 Tecnologias Utilizadas
 
 - 🌱 Spring Boot
-- 🛢️ Banco de Dados (ex: PostgreSQL, MySQL)
+- 🛢️ Banco de Dados ( MySQL)
 - 🔑 Spring Security (para login e controle de acesso)
-- 🎨 Thymeleaf (caso tenha usado templates) ou React/Vue (se frontend separado)
+- 🎨 Thymeleaf
 
 ## 📂 Estrutura do Projeto
 
