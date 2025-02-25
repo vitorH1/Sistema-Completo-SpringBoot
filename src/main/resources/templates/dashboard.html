@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        .menu-toggle {
+            position: absolute; /* Fixa a posição do botão */
+            top: 50%; /* Centraliza verticalmente no top-bar */
+            left: 20px; /* Distância do canto esquerdo */
+            transform: translateY(-50%); /* Ajusta o alinhamento */
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(135deg, #dbeafe, #f3e5f5); /* Gradiente suave */
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+            overflow-x: hidden;
+        }
+        /* Top Bar */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%; /* Ocupa toda a largura da página */
+            height: 70px; /* Altura fixa */
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        .top-bar h1 {
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            font-size: 4rem;
+            color: transparent;
+            background: linear-gradient(
+                90deg,
+                #ff00de,
+                #3498db,
+                #2ecc71,
+                #ff00de
+            );
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 15px;
+            animation: 
+                gradientFlow 10s ease infinite,
+                shimmer 3s infinite alternate;
+            position: relative;
+            overflow: hidden;
+        }
+    
+        .top-bar h1::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                0deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: glimmer 3s infinite;
+        }
+    
+        /* Menu Lateral */
+        .menu {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            height: calc(100vh - 70px);
+            width: 240px;
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            padding: 20px;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+    
+        .menu-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+    
+        .menu-logo img {
+            width: 120px;
+            border-radius: 50%;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+    
+        .menu-logo img:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.4);
+        }
+    
+        .menu button {
+            width: 100%;
+            margin: 8px 0;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            background-color: transparent;
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+    
+        .menu button:hover {
+            background-color: rgba(255,255,255,0.1);
+            transform: translateX(10px);
+        }
+    
+        .menu button i {
+            margin-right: 10px;
+            color: #3498db;
+            transition: color 0.3s ease;
+        }
+    
+        .menu button:hover i {
+            color: #ffffff;
+        }
+    
+        .submenu {
+            margin-top: 10px;
+            padding-left: 20px;
+            display: none;
+            background-color: rgba(0,0,0,0.1);
+            border-radius: 8px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+    
+        .submenu button {
+            width: 100%;
+            margin: 5px 0;
+            background-color: transparent;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.8);
+            transition: all 0.3s ease;
+        }
+    
+        .submenu button:hover {
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            transform: translateX(5px);
+        }
+    
+        /* Conteúdo Principal */
+        .content {
+            margin-top: 70px;
+            margin-left: 240px;
+            padding: 20px;
+            background-color: var(--light-bg);
+            min-height: calc(100vh - 70px);
+            transition: all 0.3s ease;
+        }
+    
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .menu {
+                width: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+    
+            .content {
+                margin-left: 0;
+            }
+        }
+
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    
+        @keyframes shimmer {
+            0% {
+                text-shadow: 0 0 5px rgba(255, 0, 222, 0.5);
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(255, 0, 222, 0.8);
+            }
+            100% {
+                text-shadow: 0 0 5px rgba(255, 0, 222, 0.5);
+            }
+        }
+    
+        @keyframes glimmer {
+            0%,
+            100% {
+                transform: rotate(45deg) translateX(-100%);
+            }
+            50% {
+                transform: rotate(45deg) translateX(0);
+            }
+        }
+
+        /* Animated Menu Toggle for Better UX */
+        @keyframes menuPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        canvas {
+            width: 100% !important;
+            height: auto !important;
+        }
+        .essev{
+            width: 20% !important;
+            height: auto !important;
+        }
+    </style>
+    
+    <script>
+        function loadContent(url) {
+            const contentDiv = document.querySelector('.content');
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    contentDiv.innerHTML = html;
+                })
+                .catch(error => console.error('Erro ao carregar conteúdo:', error));
+        }
+
+        function toggleSubmenu(menuId) {
+            const submenu = document.getElementById(menuId);
+            const isCurrentlyVisible = submenu.style.display === 'block';
+            
+            // Close all submenus first
+            document.querySelectorAll('.submenu').forEach(sub => {
+                sub.style.display = 'none';
+                sub.style.maxHeight = '0';
+                sub.style.padding = '0';
+            });
+
+            // Toggle the clicked submenu
+            if (!isCurrentlyVisible) {
+                submenu.style.display = 'block';
+                submenu.style.maxHeight = '300px';
+                submenu.style.padding = '10px';
+            }
+        }
+
+        function toggleMenu() {
+            const menu = document.querySelector('.menu');
+            const content = document.querySelector('.content');
+            const menuToggle = document.querySelector('.menu-toggle');
+            
+            if (menu.style.width === '0px' || menu.style.width === '') {
+                menu.style.width = '260px';
+                menu.style.padding = '20px';
+                content.style.marginLeft = '260px';
+                menuToggle.style.animation = 'menuPulse 0.5s ease-in-out';
+            } else {
+                menu.style.width = '0';
+                menu.style.padding = '0';
+                content.style.marginLeft = '0';
+                menuToggle.style.animation = 'none';
+            }
+
+            // Remove animation after it completes
+            setTimeout(() => {
+                menuToggle.style.animation = 'none';
+            }, 500);
+        }
+
+
+
+    </script>
+</head>
+<body>
+
+    <div class="top-bar">
+        <button class="menu-toggle" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+        <h1>J.C Store</h1>
+        <div class="user-info" style="position: absolute; right:    20px; display: flex; align-items: center; gap: 15px;">
+            <p style="margin: 0;">Usuário logado como: <strong th:text="${tipoUsuario}"></strong></p>
+            <form action="/logout" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="menu">
+        <div class="menu-logo">
+            <img src="/gustavo.png" alt="Logo">
+        </div>
+
+        <button class="btn btn-primary" onclick="toggleSubmenu('produtosSubmenu')">
+            <span><i class="fas fa-box"></i> Produtos</span>
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        <div id="produtosSubmenu" class="submenu">
+            <button class="btn btn-outline-primary" onclick="loadContent('/produtos')">
+                <i class="fas fa-list"></i> Exibir
+            </button>
+            <button class="btn btn-outline-secondary">
+                <i class="fas fa-plus-circle"></i> Adicionar/Remover
+            </button>
+        </div>
+    
+        <button class="btn btn-primary" onclick="toggleSubmenu('funcionariosSubmenu')">
+            <span><i class="fas fa-users"></i> Funcionários</span>
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        <div id="funcionariosSubmenu" class="submenu">
+            <button class="btn btn-outline-primary" onclick="loadContent('/funcionarios')" >
+                <i class="fas fa-list"></i> Exibir
+            </button>
+            <button class="btn btn-outline-secondary">
+                <i class="fas fa-plus-circle"></i> Adicionar/Remover
+            </button>
+        </div>
+    
+        <button class="btn btn-primary" onclick="toggleSubmenu('clientesSubmenu')">
+            <span><i class="fas fa-user-friends"></i> Clientes</span>
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        <div id="clientesSubmenu" class="submenu">
+            <button class="btn btn-outline-primary" onclick="loadContent('/clientes')">
+                <i class="fas fa-list"></i> Exibir
+            </button>
+            <button class="btn btn-outline-secondary">
+                <i class="fas fa-plus-circle"></i> Adicionar/Remover
+            </button>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-md-6">
+                    <canvas id="produtosChart" width="400" height="300"></canvas>
+                </div>
+                <div class="col-md-6">
+                    <canvas id="clientesChart" width="400" height="300"></canvas>
+                </div>
+                <div class="col-md-5">
+                    <canvas id="funcionariosChart" width="400" height="300"></canvas>
+                </div>
+                <div class="col-md-4">
+                    <canvas id="pizzaChart" width="400" height="300"></canvas>
+                </div>
+
+            </div>
+            <div class="row mt-5">
+ 
+            </div>
+            <div class="row mt-5">
+
+            </div>
+        </div>
+    </div>    
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Carregamento do Chart.js -->
+<script src="/dashboard.js"></script> <!-- Seu arquivo JS personalizado -->
+</body>
+</html>
