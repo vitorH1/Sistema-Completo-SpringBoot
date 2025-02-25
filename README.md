@@ -45,7 +45,7 @@ Antes de rodar o projeto, certifique-se de ter instalado:
 
 1. Clone o repositório:
    ```sh
-   git clone https://github.com/SEU_USUARIO/NOME_DO_REPO.git
+   git clone [https://github.com/vitorH1/Sistema-Completo-SpringBoot]
    ```
 
 2. Entre no diretório do projeto:
@@ -60,18 +60,11 @@ Antes de rodar o projeto, certifique-se de ter instalado:
    mvn spring-boot:run
    ```
 
-## 📸 Demonstração
-
-### Tela de Login
-![Tela de Login](https://raw.githubusercontent.com/SEU_USUARIO/NOME_DO_REPO/main/imagens/tela-login.png)
-
-### Painel do Administrador
-![Painel Admin](https://raw.githubusercontent.com/SEU_USUARIO/NOME_DO_REPO/main/imagens/painel-admin.gif)
 
 ## 🔧 Endpoints da API
 
 ### 🔑 Autenticação
-- `POST /auth/login` → Autentica usuário (envia `{ "email": "user@email.com", "senha": "123456" }`)
+- `POST /auth/login` → Autentica usuário (envia `{ "email": "user@email.com", "senha": "adm" }`)
 
 ### 👤 Usuários
 - `GET /usuarios` → Lista todos os usuários  
@@ -85,13 +78,6 @@ Antes de rodar o projeto, certifique-se de ter instalado:
 - **Administrador**: Acesso total ao sistema.
 - **Usuário Comum**: Acesso limitado.
 
-## 🚀 Como Contribuir
-
-1. Faça um **fork** do projeto  
-2. Crie uma **branch** com sua feature (`git checkout -b minha-feature`)  
-3. Faça **commit** das mudanças (`git commit -m 'Minha nova feature'`)  
-4. Faça **push** para a branch (`git push origin minha-feature`)  
-5. Abra um **Pull Request**
 
 ## 📌 Histórico de Versões
 
