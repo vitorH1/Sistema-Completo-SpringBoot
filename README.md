@@ -23,7 +23,7 @@ Este é um sistema desenvolvido com **Spring Boot**, incluindo autenticação de
 /meu-projeto
 │── src/
 │   ├── main/
-│   │   ├── java/com/seuprojeto/
+│   │   ├── java/com/example/demo
 │   │   ├── resources/
 │   ├── test/
 │── pom.xml
